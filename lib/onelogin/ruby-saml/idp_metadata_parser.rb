@@ -30,7 +30,9 @@ module OneLogin
           settings.idp_entity_id = idp_entity_id
           settings.name_identifier_format = idp_name_id_format
           settings.idp_sso_target_url = single_signon_service_url
+          settings.idp_sso_target_url_bindings = single_signon_service_url_bindings
           settings.idp_slo_target_url = single_logout_service_url
+          settings.idp_slo_target_url_bindings = single_logout_service_url_bindings
           settings.idp_cert_fingerprint = fingerprint
         end
       end
@@ -84,6 +86,16 @@ module OneLogin
       def single_logout_service_url
         node = REXML::XPath.first(document, "/md:EntityDescriptor/md:IDPSSODescriptor/md:SingleLogoutService/@Location", { "md" => METADATA })
         node.value if node
+      end
+
+      def single_signon_service_url_bindings
+        nodes = REXML::XPath.match(document, "/md:EntityDescriptor/md:IDPSSODescriptor/md:SingleSignOnService/@Binding", { "md" => METADATA })
+        nodes.collect(&:value)
+      end
+
+      def single_logout_service_url_bindings
+        nodes = REXML::XPath.match(document, "/md:EntityDescriptor/md:IDPSSODescriptor/md:SingleLogoutService/@Binding", { "md" => METADATA })
+        nodes.collect(&:value)
       end
 
       def certificate
