@@ -1,3 +1,4 @@
+require 'stringio'
 require 'rubygems'
 require 'bundler'
 require 'minitest/autorun'
@@ -8,7 +9,10 @@ Bundler.require :default, :test
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 
-ENV["ruby-saml/testing"] = "1"
+require 'onelogin/ruby-saml/logging'
+
+TEST_LOGGER = Logger.new(StringIO.new)
+OneLogin::RubySaml::Logging.logger = TEST_LOGGER
 
 class Minitest::Test
   def fixture(document, base64 = true)
